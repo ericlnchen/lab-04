@@ -13,9 +13,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 if __name__ == '__main__':
+
     #get IP address
-    ip_address=0 
-    """your code here"""
+    hostname = socket.gethostname() # needs to hostname to find IP address
+    ip_address= socket.gethostbyname(hostname) # uses the hostname to find IP address
+    
     #create a client object
     client = mqtt.Client()
     
@@ -40,12 +42,26 @@ if __name__ == '__main__':
     time.sleep(1)
 
     while True:
+    
         #replace user with your USC username in all subscriptions
-        client.publish("user/ipinfo", f"{ip_address}")
+        client.publish("echen606/ipinfo", f"{ip_address}")
         print("Publishing ip address")
         time.sleep(4)
 
         #get date and time 
-        """your code here"""
+        datetime_obj = datetime.now() # gets the data YEAR:MONTH:DATE
+        date_now = datetime_obj.date()
+        
+        time_now = time.strftime("%H:%M:%S", time.localtime()) # gets the time HR:MIN:SEC
+        
         #publish date and time in their own topics
-        """your code here"""
+        client.publish("echen606/date", f"{date_now}")
+        print("Publishing current date")
+        time.sleep(4)
+        
+        client.publish("echen606/time", f"{time_now}")
+        print("Publishing current time")
+        time.sleep(4)
+        
+        
+        

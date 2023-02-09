@@ -2,6 +2,7 @@
 Run vm_pub.py in a separate terminal on your VM."""
 
 import paho.mqtt.client as mqtt
+from datetime import datetime
 
 """This function (or "callback") will be executed when this client receives 
 a connection acknowledgement packet response from the server. """
@@ -14,11 +15,15 @@ def on_connect(client, userdata, flags, rc):
 
     print("Connected to server (i.e., broker) with result code "+str(rc))
     #replace user with your USC username in all subscriptions
-    client.subscribe("user/ipinfo")
+    client.subscribe("echen606/ipinfo")
+    client.subscribe("echen606/date")
+    client.subscribe("echen606/time")
     
     #Add the custom callbacks by indicating the topic and the name of the callback handle
-    client.message_callback_add("user/ipinfo", on_message_from_ipinfo)
-
+    client.message_callback_add("echen606/ipinfo", on_message_from_ipinfo)
+    client.message_callback_add("echen606/date", on_message_from_date)
+    client.message_callback_add("echen606/time", on_message_from_time)
+    
 
 """This object (functions are objects!) serves as the default callback for 
 messages received when another node publishes a message this client is 
@@ -27,11 +32,16 @@ callback has not been registered using paho-mqtt's message_callback_add()."""
 def on_message(client, userdata, msg):
     print("Default callback - topic: " + msg.topic + "   msg: " + str(msg.payload, "utf-8"))
 
+
 #Custom message callback.
-def on_message_from_ipinfo(client, userdata, message):
+def on_message_from_ipinfo(client, userdata, message): # message for ip info
    print("Custom callback  - IP Message: "+message.payload.decode())
-
-
+   
+def on_message_from_date(client, userdata, message): # message for date info
+   print("Custom callback  - Date Message: "+message.payload.decode())
+   
+def on_message_from_time(client, userdata, message): # message for time info
+   print("Custom callback  - Time Message: "+message.payload.decode())
 
 
 if __name__ == '__main__':
